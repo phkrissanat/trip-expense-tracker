@@ -1,4 +1,4 @@
-const CACHE_NAME = 'trip-expense-tracker-v1';
+const CACHE_NAME = 'trip-expense-tracker-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -28,6 +28,10 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return; // let cross-origin requests (e.g. QR image API) pass through untouched
+
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
